@@ -5,6 +5,12 @@ const playback = () => {
   if (!ctx) {
     ctx = new AudioContext()
   }
+  fetch('assets/2.wav')
+    .then(data => data.arrayBuffer())
+    .then(arrayBuffer => ctx.decodeAudioData(arrayBuffer))
+    .then(decodedAudio => {
+      audio = decodedAudio
+    })
 
   const playSound = ctx.createBufferSource()
   playSound.buffer = audio
@@ -14,13 +20,6 @@ const playback = () => {
 }
 
 const init = () => {
-  fetch('assets/2.wav')
-    .then(data => data.arrayBuffer())
-    .then(arrayBuffer => ctx.decodeAudioData(arrayBuffer))
-    .then(decodedAudio => {
-      audio = decodedAudio
-    })
-
   window.addEventListener('mousedown', playback)
 }
 
