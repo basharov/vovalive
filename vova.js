@@ -30,6 +30,10 @@ const playback = () => {
   playSound2.buffer = audio2
   playSound2.connect(ctx.destination)
   playSound2.start(ctx.currentTime + 1000)
+
+
+  console.log(`sound1: ${playSound.duration}`)
+  console.log(`sound2: ${playSound2.duration}`)
 }
 
 const init = () => {
