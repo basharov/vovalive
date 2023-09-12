@@ -2,6 +2,7 @@ let ctx
 let audio
 
 const playback = () => {
+  console.log('playback')
   if (!ctx) {
     ctx = new AudioContext()
   }
@@ -16,7 +17,6 @@ const playback = () => {
   playSound.buffer = audio
   playSound.connect(ctx.destination)
   playSound.start(ctx.currentTime)
-  console.log('playback')
 }
 
 const init = () => {
