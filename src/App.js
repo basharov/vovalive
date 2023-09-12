@@ -21,7 +21,7 @@ function App() {
 
     const synths = new Tone.Players(
       {
-        1: `${baseUrl}/synths/agressive_scream_ambient.wav`,
+        aggr: `${baseUrl}/synths/agressive_scream_ambient.wav`,
       }
     ).toDestination()
 
@@ -30,7 +30,7 @@ function App() {
 
   const play = async () => {
     await Tone.start()
-    const synth1 = synths.player('1')
+    const synth1 = synths.player('aggr')
     const und1Player = sounds.player('und1')
     const und2Player = sounds.player('und2')
     synth1.loop = true
