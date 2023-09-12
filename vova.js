@@ -1,5 +1,6 @@
 let ctx
-let audio
+let audio1
+let audio2
 
 const playback = () => {
   console.log('playback')
@@ -10,14 +11,25 @@ const playback = () => {
     .then(data => data.arrayBuffer())
     .then(arrayBuffer => ctx.decodeAudioData(arrayBuffer))
     .then(decodedAudio => {
-      audio = decodedAudio
+      audio1 = decodedAudio
+    })
+
+  fetch('assets/3.wav')
+    .then(data => data.arrayBuffer())
+    .then(arrayBuffer => ctx.decodeAudioData(arrayBuffer))
+    .then(decodedAudio => {
+      audio2 = decodedAudio
     })
 
   const playSound = ctx.createBufferSource()
-  playSound.buffer = audio
+  playSound.buffer = audio1
   playSound.connect(ctx.destination)
   playSound.start(ctx.currentTime)
-  playSound.start(ctx.currentTime + 10)
+
+  const playSound2 = ctx.createBufferSource()
+  playSound2.buffer = audio2
+  playSound2.connect(ctx.destination)
+  playSound2.start(ctx.currentTime)
 }
 
 const init = () => {
