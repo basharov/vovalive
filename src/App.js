@@ -25,6 +25,7 @@ function App() {
       }
     ).toDestination()
 
+    setSounds(players)
     setSynths(synths)
   }
 
