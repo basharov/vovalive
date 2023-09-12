@@ -1,4 +1,4 @@
-const ctx = new AudioContext()
+let ctx
 let audio
 
 const playback = () => {
@@ -10,6 +10,7 @@ const playback = () => {
 }
 
 const init = () => {
+  ctx = new AudioContext()
   fetch('assets/2.wav')
     .then(data => data.arrayBuffer())
     .then(arrayBuffer => ctx.decodeAudioData(arrayBuffer))
