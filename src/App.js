@@ -48,48 +48,17 @@ function App() {
 
     const synthToPlay = _sample([tense, synth1, beat, beat2])
 
-    const und1Player = sounds.player('und1')
-    const und2Player = sounds.player('und2')
-    const und3Player = sounds.player('und3')
-    const und4Player = sounds.player('und4')
-    const und5Player = sounds.player('und5')
-    const und6Player = sounds.player('und6')
-    const und7Player = sounds.player('und7')
-    const und8Player = sounds.player('und8')
+    const playersList=[]
 
-    const und9Player = sounds.player('und9')
-    const und10Player = sounds.player('und10')
-    const und11Player = sounds.player('und11')
-    const und12Player = sounds.player('und12')
-    const und13Player = sounds.player('und13')
-    const und14Player = sounds.player('und14')
-    const und15Player = sounds.player('und15')
-    const und16Player = sounds.player('und16')
+    for (let i = 0; i < 87; i += 1) {
+      playersList.push(sounds.player(`i${i}`))
+    }
 
     synthToPlay.loop = true
     synthToPlay.start()
 
-    const players = [
-      und1Player,
-      und2Player,
-      und3Player,
-      und4Player,
-      und5Player,
-      und6Player,
-      und7Player,
-      und8Player,
-      und9Player,
-      und10Player,
-      und11Player,
-      und12Player,
-      und13Player,
-      und14Player,
-      und15Player,
-      und16Player
-    ]
-
     setInterval(() => {
-      const playerNow = _sample(players)
+      const playerNow = _sample(playersList)
       playerNow.start(0)
       console.log(playerNow.name)
     }, 5000)
