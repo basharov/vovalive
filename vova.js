@@ -29,7 +29,7 @@ const playback = () => {
   const playSound2 = ctx.createBufferSource()
   playSound2.buffer = audio2
   playSound2.connect(ctx.destination)
-  playSound2.start(ctx.currentTime)
+  playSound2.start(ctx.currentTime + 1000)
 }
 
 const init = () => {
