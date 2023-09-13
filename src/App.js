@@ -15,7 +15,7 @@ function App() {
   const loadSounds = async () => {
     await Tone.start()
 
-    const samples = _range(148).reduce((acc, item) => {
+    const samples = _range(422).reduce((acc, item) => {
       return {...acc, ...{[`i${item}`]: `${baseUrl}/vova/${item}.wav`}}
     }, {})
 
