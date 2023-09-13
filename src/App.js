@@ -4,6 +4,7 @@ import { useState } from 'react'
 import _sample from 'lodash/sample'
 import _range from 'lodash/range'
 
+const samplesAmount=422
 
 const baseUrl = 'https://basharov.net/vovalive/assets'
 
@@ -15,7 +16,7 @@ function App() {
   const loadSounds = async () => {
     await Tone.start()
 
-    const samples = _range(422).reduce((acc, item) => {
+    const samples = _range(samplesAmount).reduce((acc, item) => {
       return {...acc, ...{[`i${item}`]: `${baseUrl}/vova/${item}.wav`}}
     }, {})
 
@@ -50,7 +51,7 @@ function App() {
 
     const playersList=[]
 
-    for (let i = 0; i < 87; i += 1) {
+    for (let i = 0; i < samplesAmount; i += 1) {
       playersList.push(sounds.player(`i${i}`))
     }
 
