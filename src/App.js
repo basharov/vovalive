@@ -3,7 +3,7 @@ import * as Tone from 'tone'
 import { useState } from 'react'
 import _random from 'lodash/random'
 
-const samplesAmount = 1400
+const samplesAmount = 1120
 
 const baseUrl = 'https://basharov.net/vovalive/assets'
 
