@@ -1,29 +1,20 @@
 import './App.css'
 import * as Tone from 'tone'
 import { useState } from 'react'
-import _sample from 'lodash/sample'
-import _range from 'lodash/range'
+import _random from 'lodash/random'
 
-const samplesAmount=422
+const samplesAmount = 422
 
 const baseUrl = 'https://basharov.net/vovalive/assets'
 
 function App() {
 
-  const [sounds, setSounds] = useState(undefined)
+  const [samples, setSamples] = useState(new Tone.Players())
   const [synths, setSynths] = useState(undefined)
+  const [started, setStarted] = useState(true)
 
-  const loadSounds = async () => {
+  const loadSynths = async () => {
     await Tone.start()
-
-    const samples = _range(samplesAmount).reduce((acc, item) => {
-      return {...acc, ...{[`i${item}`]: `${baseUrl}/vova/${item}.wav`}}
-    }, {})
-
-    console.log(samples)
-
-    const players = new Tone.Players(samples).toDestination()
-
     const synths = new Tone.Players(
       {
         aggr: `${baseUrl}/synths/agressive_scream_ambient.wav`,
@@ -31,64 +22,77 @@ function App() {
         beat: `${baseUrl}/synths/anxious_dark_ambient_heart_beat_2.wav`,
         beat2: `${baseUrl}/synths/anxious_dark_ambient_heart_beat.wav`,
         tense: `${baseUrl}/synths/dark_tense_drone.wav`,
+        // drone2: `${baseUrl}/drones/deep.wav`,
+      }, {
+        volume: -20,
+        fadeIn: 5,
+        onload: () => {
+          const aggrPlayer = synths.player('aggr')
+
+          aggrPlayer.loop = true
+          aggrPlayer.start()
+
+          // synths.player('aggr')
+          // synths.player('aggr').loop = true
+          // synths.player('aggr').start()
+        }
       }
     ).toDestination()
 
-    setSounds(players)
-    setSynths(synths)
   }
-
-  const play = async () => {
+  const loadSample = async () => {
     await Tone.start()
 
-    const synth1 = synths.player('aggr')
-    const synth2 = synths.player('drone')
-    const beat = synths.player('beat')
-    const beat2 = synths.player('beat2')
-    const tense = synths.player('tense')
+    // const pitchShift = new Tone.PitchShift(-2).toDestination();
+    // const crusher = new Tone.BitCrusher(8).toDestination();
+    const tremolo = new Tone.Tremolo(90, 0).toDestination()
+    // const filter = new Tone.Filter("G5").toDestination();
 
-    const synthToPlay = _sample([tense, synth1, beat, beat2])
-
-    const playersList=[]
-
-    for (let i = 0; i < samplesAmount; i += 1) {
-      playersList.push(sounds.player(`i${i}`))
+    console.log(started)
+    if (!started) {
+      return
     }
 
-    synthToPlay.loop = true
-    synthToPlay.start()
+    const sampleIndex = _random(samplesAmount)
 
-    setInterval(() => {
-      const playerNow = _sample(playersList)
-      playerNow.start(0)
-      console.log(playerNow.name)
-    }, 5000)
+    const delay = _random(5000)
 
-    setInterval(() => {
-      synth2.start(0)
-    }, 9000)
+    console.log(delay)
 
-
-    // und1Player.start('+3')
-
+    if (samples.has(sampleIndex)) {
+      setTimeout(() => {
+        samples.player(sampleIndex).fan(tremolo)
+        samples.player(sampleIndex).start()
+      }, delay)
+    } else {
+      samples.add(sampleIndex, `${baseUrl}/vova/${sampleIndex}.wav`, (val) => {
+        console.log('loaded')
+        samples.player(sampleIndex).onstop = () => {
+          loadSample()
+        }
+        setTimeout(() => {
+          samples.player(sampleIndex).fan(tremolo)
+          samples.player(sampleIndex).start()
+        }, delay)
+      })
+    }
   }
 
-  const stop = async () => {
+  const load = () => {
+    setStarted(true)
+    loadSynths()
+    loadSample()
+  }
 
-    const synth1 = synths.player('aggr')
-    const und1Player = sounds.player('und1')
-    const und2Player = sounds.player('und2')
-    synth1.stop()
-    und1Player.stop()
-    und2Player.stop()
-    Tone.Transport.stop()
-
+  const stop = () => {
+    console.log(samples)
+    samples.stopAll()
+    setStarted(false)
   }
 
   return (
     <div className='App'>
-      <button onClick={loadSounds}>Load</button>
-      <button onClick={play}>Play</button>
+      <button onClick={load}>Load</button>
       <button onClick={stop}>Stop</button>
     </div>
   )
