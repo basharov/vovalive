@@ -3,15 +3,22 @@ import * as Tone from 'tone'
 import { useState } from 'react'
 import _random from 'lodash/random'
 
-const samplesAmount = 1120
+const samplesAmount = 1380
 
 const baseUrl = 'https://basharov.net/vovalive/assets'
 
 function App() {
 
-  const [samples, setSamples] = useState(new Tone.Players())
+  const [samples, setSamples] = useState(undefined)
   const [synths, setSynths] = useState(undefined)
   const [started, setStarted] = useState(true)
+
+
+  const loadTone = () => {
+    const players = new Tone.Players()
+    console.log(players)
+    setSamples(players)
+  }
 
   const loadSynths = async () => {
     await Tone.start()
@@ -48,14 +55,9 @@ function App() {
     const tremolo = new Tone.Tremolo(90, 0).toDestination()
     // const filter = new Tone.Filter("G5").toDestination();
 
-    console.log(started)
-    if (!started) {
-      return
-    }
-
     const sampleIndex = _random(samplesAmount)
 
-    const delay = _random(5000)
+    const delay = _random(1000)
 
     console.log({delay, sampleIndex})
 
@@ -65,8 +67,12 @@ function App() {
         samples.player(sampleIndex).start()
       }, delay)
     } else {
-      samples.add(sampleIndex, `${baseUrl}/vova/${sampleIndex}.wav`, (val) => {
-        console.log('loaded')
+      const buff = await new Tone.ToneAudioBuffer(`${baseUrl}/vova/${sampleIndex}.wav`, undefined, (err) => {
+        console.log(err)
+        loadSample()
+      })
+
+      samples.add(sampleIndex, buff, (val) => {
         samples.player(sampleIndex).onstop = () => {
           loadSample()
         }
@@ -75,7 +81,10 @@ function App() {
           samples.player(sampleIndex).start()
         }, delay)
       })
+
     }
+
+
   }
 
   const load = () => {
@@ -92,7 +101,8 @@ function App() {
 
   return (
     <div className='App'>
-      <button onClick={load}>Load</button>
+      <button onClick={loadTone}>Load Tone</button>
+      <button onClick={load}>Load samples</button>
       <button onClick={stop}>Stop</button>
     </div>
   )
