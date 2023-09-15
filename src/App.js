@@ -3,7 +3,7 @@ import * as Tone from 'tone'
 import { useState } from 'react'
 import _random from 'lodash/random'
 
-const samplesAmount = 422
+const samplesAmount = 1400
 
 const baseUrl = 'https://basharov.net/vovalive/assets'
 
@@ -57,7 +57,7 @@ function App() {
 
     const delay = _random(5000)
 
-    console.log(delay)
+    console.log({delay, sampleIndex})
 
     if (samples.has(sampleIndex)) {
       setTimeout(() => {
